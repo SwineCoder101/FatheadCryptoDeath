@@ -1,6 +1,7 @@
 pragma solidity ^0.7.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
@@ -15,8 +16,6 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
     uint256 public constant fatHeadPrice = 110000000000000000; //0.11 ETH
 
     uint public constant maxFatHeadPurchase = 10;
-    uint private tokenCounter=0;
-
     uint256 public MAX_FatHead;
 
     bool public saleIsActive = false;
@@ -61,10 +60,6 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
         saleIsActive = !saleIsActive;
     }
 
-    function tokenCounter() public {
-        return totalSupply();
-    }
-
     /**
     * Mints FatHead
     */
@@ -73,7 +68,10 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
         require(numberOfTokens <= maxFatHeadPurchase, "Can only mint 10 tokens at a time");
         require(totalSupply().add(numberOfTokens) <= MAX_FatHead, "Purchase would exceed max supply of FatHead");
         require(fatHeadPrice.mul(numberOfTokens) <= msg.value, "Ether value sent is not correct");
-        
+        mintNumberOfTokens(numberOfTokens);
+    }
+
+    function mintNumberOfTokens(uint numberOfTokens) private{
         for(uint i = 0; i < numberOfTokens; i++) {
             uint mintIndex = totalSupply();
             if (totalSupply() < MAX_FatHead) {
@@ -81,4 +79,21 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
             }
         }
     }
+
+    function burnTwoForOne(uint256 t1, uint256 t2) public {
+        require(saleIsActive, "Sale must be active to mint FatHead");
+        //require(totalSupply().add(numberOfTokens) <= MAX_FatHead, "Purchase would exceed max supply of FatHead");
+        //require(fatHeadPrice.mul(numberOfTokens) <= msg.value, "Ether value sent is not correct");           
+        burn(t1);
+        burn(t2);
+        mintNumberOfTokens(1);
+    }
+
+  function burn(uint256 tokenId)
+    private
+  {
+    require(_isApprovedOrOwner(msg.sender, tokenId));
+    require(ERC721.ownerOf(tokenId) == msg.sender, string(abi.encodePacked("ERC721: Sender does not own TokenId: ", tokenId)));
+    _burn(tokenId);
+  }
 }
