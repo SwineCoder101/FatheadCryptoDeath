@@ -93,7 +93,13 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
     private
   {
     require(_isApprovedOrOwner(msg.sender, tokenId));
+    require(_exists(tokenId));
     require(ERC721.ownerOf(tokenId) == msg.sender, string(abi.encodePacked("ERC721: Sender does not own TokenId: ", tokenId)));
     _burn(tokenId);
   }
+
+  function getTokenURI(uint256 tokenId) public view returns(string memory){
+      return ERC721.tokenURI(tokenId);
+  }
+
 }
