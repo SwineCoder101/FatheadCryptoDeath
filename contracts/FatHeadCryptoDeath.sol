@@ -22,6 +22,9 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
 
     bool public customfatHeadMinted = false;
 
+    mapping(address => bool) whitelisted;
+    mapping(address => bool) minted;
+    
     constructor() ERC721("fatHead", "FATHEAD") {
         MAX_FatHead = 10;
     }
@@ -29,6 +32,17 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
     function withdraw() public onlyOwner {
         uint balance = address(this).balance;
         msg.sender.transfer(balance);
+    }
+
+    function uploadMon(bytes calldata s) external{
+    }
+
+    function bytesToImageURI(string memory svg) public pure returns (string memory){
+        //data:image/svg+xml;base64,<base54-encoding>
+        string memory baseURL = "data:image/png+xml;base64,";
+        string memory svgBase64Encoded = Base64.encode(bytes(string(abi.encodePacked(svg))));
+        string memory imageURI = string(abi.encodePacked(baseURL, svgBase64Encoded));
+        return imageURI;
     }
 
     /**
@@ -71,11 +85,17 @@ contract FatHeadCryptoDeath is ERC721, Ownable {
         mintNumberOfTokens(numberOfTokens);
     }
 
+    function whitelistAddresses(address[] calldata wallets) public onlyOwner {
+        for(uint256 i=0; i<wallets.length;i++) {
+            whitelisted[wallets[i]] = true;
+        }
+    }
+
     function mintNumberOfTokens(uint numberOfTokens) private{
         for(uint i = 0; i < numberOfTokens; i++) {
             uint mintIndex = totalSupply();
             if (totalSupply() < MAX_FatHead) {
-                _safeMint(msg.sender, mintIndex);
+                _safeMint(msg.sender, 500 + mintIndex);
             }
         }
     }
