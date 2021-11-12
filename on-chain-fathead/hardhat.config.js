@@ -16,7 +16,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // Go to https://hardhat.org/config/ to learn more
 require('dotenv').config();
 const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL;
-const MNEMONIC= process.env.MNEMONIC;
+//const MNEMONIC= process.env.MNEMONIC;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 /**

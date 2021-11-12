@@ -5,15 +5,15 @@ const { ethers, Wallet } = require("ethers");
 //https://rinkeby.infura.io/v3/1cd04cb98bb744c59d01758cd9e9729e
 //https://mainnet.infura.io/v3/1cd04cb98bb744c59d01758cd9e9729e
 // const provider = new ethers.providers.Web3Provider(window.ethereum);
-const provider =  new ethers.providers.InfuraProvider('rinkeby','1cd04cb98bb744c59d01758cd9e9729e');
-const imgURI="https://ipfs.io/ipfs/QmRew4KnHQzbtLruqdoXjb4SLDKK336ru8QJzcu8nXWxo4";
-
+const provider =  new ethers.providers.InfuraProvider('rinkeby',process.env.WEB3_INFURA_PROJECT_ID);
+const imgURI=process.env.TEST_IMG_URL;
 // The Metamask plugin also allows signing transactions to
 // send ether and pay to change state within the blockchain.
 // For this, you need the account signer...
 // const signer = provider.getSigner();
-CONTRACT_ADDRESS='0xe23997D62b453bF78E7FE1F9d93E10008909434F';
-PRIVATE_KEY='8616ed595260f39e20fbd23b3c8b5c0faf2e82416cbb848097d7f2edc4f0b13a';
+CONTRACT_ADDRESS=process.env.TEST_CONTRACT_ADDRESS;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+//9824e6b84f77de92b52874c74c6282518d52be7c0d90cec350ff9096bd6b2865
 // balance = await provider.getBalance("ethers.eth");
 // ethers.utils.formatEther(balance);
 // ethers.utils.parseEther("1.0");
@@ -24,6 +24,7 @@ let arrAtt=[];
 function setArrAtt(arr){
     arrAtt=arr;
 }
+
 async function main(){
     const ABI=['function mintBanner(string memory imageURI, string []  memory attributeArr) public payable'];
     console.log(wallet);
@@ -31,17 +32,17 @@ async function main(){
     // const value = await readOnlyContract.tokenURI(0);
 
     // console.log(value.toString());
+    const price = ethers.utils.parseEther("0.125");
+    console.log(price);
 
     // const signer = provider.getSigner();
     const contract = await new ethers.Contract(CONTRACT_ADDRESS,ABI,wallet);
     const mintjson = {
     gasLimit: 500_000,
-    value: 110,
+    value: price,
     gasPrice: "30000000000000"};
-    console.log(contract);
+    //console.log(contract);
     outTrans = await contract.mintBanner(imgURI,["banner","test","twitter"],mintjson);
-
-
     // await signer.sendTransaction()
 }
 

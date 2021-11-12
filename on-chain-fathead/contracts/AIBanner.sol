@@ -7,9 +7,9 @@ pragma solidity 0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "base64-sol/base64.sol";
-import '@openzeppelin/contracts/access/Ownable.sol';
+//import '@openzeppelin/contracts/access/Ownable.sol';
 
-contract AIBanner is ERC721URIStorage, Ownable{
+contract AIBanner is ERC721URIStorage{ //, Ownable
     uint256 public tokenCounter;
     uint256 public constant price = 125000000000000000; //0.125 ETH
     uint256 public constant MAX_Tokens = 8888;
@@ -23,7 +23,7 @@ contract AIBanner is ERC721URIStorage, Ownable{
     /*
     * Pause sale if active, make active if paused
     */
-    function flipSaleState() public onlyOwner {
+    function flipSaleState() public { //onlyOwner
         saleIsActive = !saleIsActive;
     }
 
